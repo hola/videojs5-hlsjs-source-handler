@@ -10,12 +10,12 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "hls.js": "^0.5.17"
+    "hls.js": "hola/hls.js#v0.6.1-35"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git@github.com:streamroot/videojs5-hlsjs-source-handler"
+    "url": "https://github.com/hola/videojs5-hlsjs-source-handler.git"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
