@@ -9,9 +9,7 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
-  "dependencies": {
-    "hls.js": "hola/hls.js#v0.6.1-35"
-  },
+  "dependencies": {},
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -22,6 +20,7 @@
     "grunt-browserify": "4.0.1",
     "grunt-contrib-uglify": "^1.0.0",
     "matchdep": "0.3.0",
-    "video.js": "^5.8.0"
+    "video.js": "^5.8.0",
+    "hls.js": "hola/hls.js#v0.6.1-35"
   }
 }
