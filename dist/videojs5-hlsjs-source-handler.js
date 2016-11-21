@@ -1,11 +1,9 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var attachVideojsStreamrootProvider = require('./videojs5-hlsjs-source-handler.js');
-
-attachVideojsStreamrootProvider(window, videojs, Hls);
+require('./videojs5-hlsjs-source-handler.js')(window, videojs, Hls);
 
 },{"./videojs5-hlsjs-source-handler.js":2}],2:[function(require,module,exports){
-var attachVideojsStreamrootProvider = function (window, videojs, Hls) {
-    function StreamrootProviderHLS (source, tech) {
+var attachVideojsHolaProvider = function (window, videojs, Hls) {
+    function HolaProviderHLS (source, tech) {
         tech.name_ = 'holaHLS';
 
         var _video = tech.el();
@@ -178,7 +176,7 @@ var attachVideojsStreamrootProvider = function (window, videojs, Hls) {
                     tech.hlsProvider.dispose();
                 }
 
-                tech.hlsProvider = new StreamrootProviderHLS(source, tech);
+                tech.hlsProvider = new HolaProviderHLS(source, tech);
 
                 return tech.hlsProvider;
             }
@@ -189,9 +187,9 @@ var attachVideojsStreamrootProvider = function (window, videojs, Hls) {
         console.error("Hls.js is not supported in this browser!");
     }
 
-    videojs.StreamrootProviderHLS = StreamrootProviderHLS;
+    videojs.HolaProviderHLS = HolaProviderHLS;
 };
 
-module.exports = attachVideojsStreamrootProvider;
+module.exports = attachVideojsHolaProvider;
 
 },{}]},{},[1]);
