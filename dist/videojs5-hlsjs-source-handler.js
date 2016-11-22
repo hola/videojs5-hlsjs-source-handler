@@ -37,9 +37,13 @@ var attachVideojsHolaProvider = function (window, videojs, Hls) {
             var hlsjsConfig = tech.options_.hlsjsConfig || {};
 
             tech.hls_obj = _hls = new Hls(hlsjsConfig);
-            _hls.on(Hls.Events.ERROR, function(event, data) { _onError(event, data, tech, _errorCounts) });
-            _hls.on(Hls.Events.MANIFEST_PARSED, _onMetaData);
-            _hls.on(Hls.Events.LEVEL_LOADED, function(event, data) { _duration = data.details.live ? Infinity : data.details.totalduration; });
+            _hls.on(Hls.Events.ERROR, function(event, data) {
+                _onError(event, data, tech, _errorCounts);
+            });
+            _hls.on(Hls.Events.LEVEL_SWITCH, updateQuality);
+            _hls.on(Hls.Events.LEVEL_LOADED, function(event, data) {
+                _duration = data.details.live ? Infinity : data.details.totalduration;
+            });
 
             _hls.attachMedia(_video);
         }
@@ -56,7 +60,7 @@ var attachVideojsHolaProvider = function (window, videojs, Hls) {
             _hls.loadSource(source.src);
         }
 
-        function switchQuality(qualityId, trackType) {
+        function switchQuality(qualityId) {
             _hls.nextLevel = qualityId;
         }
 
@@ -110,40 +114,54 @@ var attachVideojsHolaProvider = function (window, videojs, Hls) {
             }
         }
 
-        function _onMetaData(event, data) {
-            var cleanTracklist = [];
+        function scaledNumber(num){
+            if (num===undefined)
+                return '';
+            if (!num)
+                return '0';
+            var k = 1024;
+            var sizes = ['', 'K', 'M', 'G', 'T', 'P'];
+            var i = Math.floor(Math.log(num)/Math.log(k));
+            num /= Math.pow(k, i);
+            if (num<0.001)
+                return '0';
+            if (num>=k-1)
+                num = Math.trunc(num);
+            var str = num.toFixed(num<1 ? 3 : num<10 ? 2 : num<100 ? 1 : 0);
+            return str.replace(/\.0*$/, '')+sizes[i];
+        }
 
-            if (data.levels.length > 1) {
-                var autoLevel = {
-                    id: -1,
-                    label: "auto",
-                    selected: -1 === _hls.manualLevel
-                };
-                cleanTracklist.push(autoLevel);
-            }
+        function _levelLabel(level) {
+            if (level.height) return level.height + "p";
+            else if (level.width) return Math.round(level.width * 9 / 16) + "p";
+            else if (level.bitrate) return scaledNumber(level.bitrate) + "bps";
+            else return 0;
+        }
 
-            data.levels.forEach(function(level, index) {
-                var quality = {}; // Don't write in level (shared reference with Hls.js)
-                quality.id = index;
-                quality.selected = index === _hls.manualLevel;
-                quality.label = _levelLabel(level);
+        function levelData(id, label){ return {id: id, label: label}; }
 
-                cleanTracklist.push(quality);
+        function updateQuality() {
+            var list = [], levels = _hls.levels;
+            if (levels.length > 1)
+                list.push(levelData(-1, 'auto'));
+            levels.forEach(function(level, index){
+                list.push(levelData(index, _levelLabel(level))); });
+            console.log({
+                quality: {
+                    list: list,
+                    selected: _hls.manualLevel,
+                    current: _hls.loadLevel,
+                },
+                callback: switchQuality,
             });
-
-            var payload = {
-                qualityData: {video: cleanTracklist},
-                qualitySwitchCallback: switchQuality
-            };
-
-            tech.trigger('loadedqualitydata', payload);
-
-            function _levelLabel(level) {
-                if (level.height) return level.height + "p";
-                else if (level.width) return Math.round(level.width * 9 / 16) + "p";
-                else if (level.bitrate) return (level.bitrate / 1000) + "kbps";
-                else return 0;
-            }
+            tech.trigger('loadedqualitydata', {
+                quality: {
+                    list: list,
+                    selected: _hls.manualLevel,
+                    current: _hls.loadLevel,
+                },
+                callback: switchQuality,
+            });
         }
 
         initialize();
