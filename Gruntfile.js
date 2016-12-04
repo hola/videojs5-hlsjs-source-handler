@@ -1,8 +1,4 @@
 module.exports = function(grunt) {
-    require("matchdep").filterDev("grunt-*").forEach(grunt.loadNpmTasks);
-
-    grunt.registerTask('default', ['browserify']);
-
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         browserify: {
@@ -18,7 +14,7 @@ module.exports = function(grunt) {
                 }
             },
             dist: {
-                src: 'lib/main.js',
+                src: 'lib/videojs5-hlsjs-source-handler.js',
                 dest: 'dist/videojs5-hlsjs-source-handler.js',
                 options:  {
                     browserifyOptions: {
@@ -39,14 +35,15 @@ module.exports = function(grunt) {
             },
             dist: {
                 files: {
-                    'dist/videojs5-hlsjs-source-handler.min.js': 'dist/videojs5-hlsjs-source-handler.js'
+                    'dist/videojs5-hlsjs-source-handler.min.js':
+                        'dist/videojs5-hlsjs-source-handler.js'
                 }
             }
         }
     });
-
-
-    grunt.registerTask('build', 'build dist scripts', ['browserify:dist', 'uglify:dist']);
-
-
-}
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-browserify');
+    grunt.registerTask('build', 'build dist scripts',
+        ['browserify:dist', 'uglify:dist']);
+    grunt.registerTask('default', ['build']);
+};
