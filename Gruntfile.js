@@ -7,7 +7,8 @@ module.exports = function(grunt) {
                 dest: 'debug/videojs5-hlsjs-source-handler.js',
                 options:  {
                     browserifyOptions: {
-                        debug: true
+                        debug: true,
+                        standalone: 'attachHolaProviderHLS'
                     },
                     watch: true,
                     keepAlive: true
@@ -19,6 +20,7 @@ module.exports = function(grunt) {
                 options:  {
                     browserifyOptions: {
                         debug: false,
+                        standalone: 'attachHolaProviderHLS'
                     },
                     watch: false,
                     keepAlive: false,
