@@ -182,6 +182,7 @@ function attachHolaProviderHLS(window, videojs, Hls_) {
         sourceHandler.disabled = false;
     } else if (Hls.isSupported()) {
         sourceHandler.attached = true;
+        sourceHandler.disabled = false;
         videojs.getComponent('Html5').registerSourceHandler(sourceHandler, 0);
         videojs.HolaProviderHLS = HolaProviderHLS;
         console.log("HolaProviderHLS registerd as Html5 SourceHandler");
