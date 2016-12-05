@@ -8,7 +8,7 @@ module.exports = function(grunt) {
                 options:  {
                     browserifyOptions: {
                         debug: true,
-                        standalone: 'attachHolaProviderHLS'
+                        standalone: 'HolaProviderHLS'
                     },
                     watch: true,
                     keepAlive: true
@@ -20,7 +20,7 @@ module.exports = function(grunt) {
                 options:  {
                     browserifyOptions: {
                         debug: false,
-                        standalone: 'attachHolaProviderHLS'
+                        standalone: 'HolaProviderHLS'
                     },
                     watch: false,
                     keepAlive: false,
