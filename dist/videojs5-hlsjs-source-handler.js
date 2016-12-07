@@ -21,7 +21,7 @@ var sourceHandler = {
         if (tech.hlsProvider) {
             tech.hlsProvider.dispose();
         }
-        tech.hlsProvider = new HolaProviderHLS(source, tech);
+        tech.hlsProvider = new HolaProviderHLS(source, tech, this.hlsjsConfig);
         return tech.hlsProvider;
     },
     name: 'HolaProviderHLS',
@@ -29,7 +29,7 @@ var sourceHandler = {
     disabled: false,
 };
 
-function HolaProviderHLS(source, tech) {
+function HolaProviderHLS(source, tech, hlsjsConfig) {
     tech.name_ = 'holaHLS';
     var _video = tech.el();
     var _hls;
@@ -56,8 +56,8 @@ function HolaProviderHLS(source, tech) {
     });
 
     function initialize() {
-        var hlsjsConfig = tech.options_.hlsjsConfig || {};
-        tech.hls_obj = _hls = new Hls(hlsjsConfig);
+        tech.hls_obj = _hls = new Hls(videojs.mergeOptions(
+            tech.options_.hlsjsConfig, hlsjsConfig));
         _hls.on(Hls.Events.ERROR, function(event, data) {
             _onError(event, data, tech, _errorCounts);
         });
@@ -176,8 +176,10 @@ function HolaProviderHLS(source, tech) {
     load(source);
 }
 
-function attachHolaProviderHLS(window, videojs, Hls_) {
+function attachHolaProviderHLS(window, videojs, Hls_, hlsjsConfig) {
     Hls = Hls_;
+    if (hlsjsConfig)
+        sourceHandler.hlsjsConfig = hlsjsConfig;
     if (sourceHandler.attached) {
         sourceHandler.disabled = false;
     } else if (Hls.isSupported()) {
