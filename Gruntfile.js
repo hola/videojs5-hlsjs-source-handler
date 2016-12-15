@@ -17,7 +17,11 @@ module.exports = function(grunt) {
             dist: {
                 src: 'lib/videojs5-hlsjs-source-handler.js',
                 dest: 'dist/videojs5-hlsjs-source-handler.js',
-                options:  {
+                options: {
+                    postBundleCB: function(err, src, next) {
+                        return next(null, '(function(){var define=undefined;'
+                            +src+'})();');
+                    },
                     browserifyOptions: {
                         debug: false,
                         standalone: 'HolaProviderHLS'
