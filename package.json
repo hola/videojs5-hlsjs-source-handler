@@ -4,7 +4,7 @@
     "name": "Streamroot",
     "email": "contact@streamroot.io"
   },
-  "version": "0.0.8-9",
+  "version": "0.0.8-11",
   "main": "./lib/videojs5-hlsjs-source-handler.js",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
