@@ -1,14 +1,24 @@
 {
-  "name": "videojs5-hlsjs-source-handler",
-  "author": {
-    "name": "Streamroot",
-    "email": "contact@streamroot.io"
-  },
-  "version": "0.0.8-13",
+  "name": "@hola.org/videojs5-hlsjs-source-handler",
+  "version": "0.0.8-14",
   "main": "./lib/videojs5-hlsjs-source-handler.js",
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+  "scripts": {
+    "build": "grunt",
+    "login": "c=`npm c ls`; test \"${c#*@hola}\" != \"$c\" || npm login --scope @hola.org",
+    "release": "run-s build login release:*",
+    "release:tag": "git tag v$npm_package_version",
+    "release:publish": "npm publish",
+    "release:pushtags": "git push --tags origin",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "files": [
+    "CHANGELOG.md",
+    "Gruntfile.js",
+    "dist/",
+    "lib/",
+    "noamd.js",
+    ".jshintrc"
+  ],
   "dependencies": {},
   "license": "MIT",
   "repository": {
@@ -18,6 +28,7 @@
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-browserify": "4.0.1",
-    "grunt-contrib-uglify": "^1.0.0"
+    "grunt-contrib-uglify": "^1.0.0",
+    "npm-run-all": "^3.1.2"
   }
 }
