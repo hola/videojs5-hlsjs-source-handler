@@ -58,6 +58,7 @@ function HolaProviderHLS(source, tech, hlsjsConfig) {
     function initialize() {
         tech.hls_obj = _hls = new Hls(videojs.mergeOptions(
             tech.options_.hlsjsConfig, hlsjsConfig));
+        _hls.manual_level = -1;
         _hls.on(Hls.Events.ERROR, function(event, data) {
             _onError(event, data, tech, _errorCounts);
         });
@@ -81,6 +82,7 @@ function HolaProviderHLS(source, tech, hlsjsConfig) {
     }
 
     function switchQuality(qualityId) {
+        _hls.manual_level = qualityId;
         _hls.loadLevel = qualityId;
     }
 
@@ -165,7 +167,7 @@ function HolaProviderHLS(source, tech, hlsjsConfig) {
         tech.trigger('loadedqualitydata', {
             quality: {
                 list: list,
-                selected: _hls.manualLevel,
+                selected: _hls.manual_level,
                 current: _hls.loadLevel,
             },
             callback: switchQuality,
