@@ -45,8 +45,7 @@ module.exports = function(grunt) {
     });
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-browserify');
-    grunt.registerTask('noamd', function(){ require('./noamd'); });
     grunt.registerTask('build', 'build dist scripts',
-        ['browserify:dist', 'noamd', 'uglify:dist']);
+        ['browserify:dist', 'uglify:dist']);
     grunt.registerTask('default', ['build']);
 };
