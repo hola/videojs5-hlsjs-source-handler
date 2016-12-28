@@ -84,6 +84,7 @@ function HolaProviderHLS(source, tech, hlsjsConfig) {
     function switchQuality(qualityId) {
         _hls.manual_level = qualityId;
         _hls.loadLevel = qualityId;
+        updateQuality();
     }
 
     function _handleMediaError() {
