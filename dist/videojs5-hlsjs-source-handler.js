@@ -208,6 +208,7 @@ function detachHolaProviderHLS() {
 
 exports.attach = attachHolaProviderHLS;
 exports.detach = detachHolaProviderHLS;
+exports.VERSION = '0.0.8-18';
 
 },{}]},{},[1])(1)
 });
