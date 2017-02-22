@@ -83,7 +83,13 @@ function HolaProviderHLS(source, tech, hlsjsConfig) {
 
     function switchQuality(qualityId) {
         _hls.manual_level = qualityId;
-        _hls.loadLevel = qualityId;
+        if (_hls.hola_adaptive)
+        {
+            (_video.player||videojs.getPlayers()[_video.playerId])
+            .trigger('mediachange');
+        }
+        else
+            _hls.loadLevel = qualityId;
         updateQuality();
     }
 
@@ -208,7 +214,7 @@ function detachHolaProviderHLS() {
 
 exports.attach = attachHolaProviderHLS;
 exports.detach = detachHolaProviderHLS;
-exports.VERSION = '0.0.8-18';
+exports.VERSION = '0.0.8-19';
 
 },{}]},{},[1])(1)
 });
