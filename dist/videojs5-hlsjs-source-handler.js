@@ -35,6 +35,8 @@ function HolaProviderHLS(source, tech, hlsjsConfig) {
     var _hls;
     var _errorCounts = {};
     var _duration = null;
+    var _seekableStart = 0;
+    var _seekableEnd = 0;
     _video.addEventListener('error', function(evt) {
         var errorTxt,mediaError=evt.currentTarget.error;
         switch(mediaError.code) {
@@ -66,11 +68,22 @@ function HolaProviderHLS(source, tech, hlsjsConfig) {
         _hls.on(Hls.Events.LEVEL_LOADED, function(event, data) {
             _duration = data.details.live ? Infinity : data.details.totalduration;
         });
+        _hls.on(Hls.Events.LEVEL_UPDATED, function(event, data) {
+            _seekableStart = data.details.live ?
+                data.details.fragments[0].start : 0;
+            _seekableEnd = data.details.live ?
+                _hls.streamController.computeLivePosition(_seekableStart,
+                data.details) : data.details.totalduration;
+        });
         _hls.attachMedia(_video);
     }
 
     this.duration = function () {
         return _duration || _video.duration || 0;
+    };
+
+    this.seekable = function(){
+        return videojs.createTimeRanges([[_seekableStart, _seekableEnd]]);
     };
 
     this.dispose = function () {
@@ -214,7 +227,7 @@ function detachHolaProviderHLS() {
 
 exports.attach = attachHolaProviderHLS;
 exports.detach = detachHolaProviderHLS;
-exports.VERSION = '0.0.8-19';
+exports.VERSION = '0.0.8-20';
 
 },{}]},{},[1])(1)
 });
