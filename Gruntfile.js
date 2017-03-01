@@ -2,18 +2,6 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         browserify: {
-            main: {
-                src: 'lib/main.js',
-                dest: 'debug/videojs5-hlsjs-source-handler.js',
-                options:  {
-                    browserifyOptions: {
-                        debug: true,
-                        standalone: 'HolaProviderHLS'
-                    },
-                    watch: true,
-                    keepAlive: true
-                }
-            },
             dist: {
                 src: 'lib/videojs5-hlsjs-source-handler.js',
                 dest: 'dist/videojs5-hlsjs-source-handler.js',
@@ -22,8 +10,6 @@ module.exports = function(grunt) {
                         debug: false,
                         standalone: 'HolaProviderHLS'
                     },
-                    watch: false,
-                    keepAlive: false,
                 }
             }
         },
