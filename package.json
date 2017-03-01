@@ -16,7 +16,6 @@
     "Gruntfile.js",
     "dist/",
     "lib/",
-    "noamd.js",
     ".jshintrc"
   ],
   "browserify": {
