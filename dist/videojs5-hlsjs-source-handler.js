@@ -75,6 +75,9 @@ function HolaProviderHLS(source, tech, hlsjsConfig) {
                 _hls.streamController.computeLivePosition(_seekableStart,
                 data.details) : data.details.totalduration;
         });
+        _hls.on(Hls.Events.FRAG_PARSING_METADATA, function(event, data) {
+            tech.trigger('parsedmetadata', data);
+        });
         _hls.attachMedia(_video);
     }
 
@@ -227,7 +230,7 @@ function detachHolaProviderHLS() {
 
 exports.attach = attachHolaProviderHLS;
 exports.detach = detachHolaProviderHLS;
-exports.VERSION = '0.0.8-20';
+exports.VERSION = '0.0.8-21';
 
 },{}]},{},[1])(1)
 });
