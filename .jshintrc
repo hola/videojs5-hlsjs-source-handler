@@ -1,20 +1,21 @@
 {
-    "undef": true,
-    "unused": true,
-    "curly": true,
-    "indent": 4,
-    "camelcase":false,
-    "forin":false,
-    "newcap":true,
-    "quotmark":false,
-    "typed":true,
-    "worker":true,
-    "browser":true,
-    "browserify":true,
-    "mocha":true,
-    "devel":true,
-    "predef": [
-        "videojs"
-    ],
-    "esnext": true
+  "evil" : true,
+  "validthis": false,
+  "browser": true,
+  "debug": true,
+  "boss": true,
+  "expr": true,
+  "eqnull": true,
+  "quotmark": "single",
+  "sub": true,
+  "trailing": true,
+  "undef": true,
+  "laxbreak": true,
+  "strict": "global",
+  "predef": [
+    "__dirname",
+    "require",
+    "module",
+    "console"
+  ]
 }

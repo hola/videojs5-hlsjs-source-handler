@@ -1,6 +1,11 @@
+'use strict';
 module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
+        jshint: {
+            options: {jshintrc: '.jshintrc'},
+            all: ['lib/*.js', './*.js'],
+        },
         browserify: {
             dist: {
                 src: 'lib/videojs5-hlsjs-source-handler.js',
@@ -30,8 +35,9 @@ module.exports = function(grunt) {
         }
     });
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-browserify');
     grunt.registerTask('build', 'build dist scripts',
-        ['browserify:dist', 'uglify:dist']);
+        ['jshint', 'browserify:dist', 'uglify:dist']);
     grunt.registerTask('default', ['build']);
 };
