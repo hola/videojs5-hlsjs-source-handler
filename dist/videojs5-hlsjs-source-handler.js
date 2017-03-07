@@ -22,7 +22,17 @@ E.attach = function(obsolete_param, videojs, Hls, hlsjsConfig_){
     {
         attached = true;
         disabled = false;
-        E.videojs.getComponent('Html5').registerSourceHandler(E, 0);
+        var tech = E.videojs.getTech('Html5');
+        // XXX yurij hack: some customers register their own provider and
+        // prevent other from being registered with 0 index (rge related)
+        if (tech.sourceHandlers instanceof Array)
+            tech.sourceHandlers.splice(0, 0, E);
+        else
+            tech.registerSourceHandler(E, 0);
+        // XXX yurij: prevent others handlers being registered with 0 index
+        var r = tech.registerSourceHandler;
+        tech.registerSourceHandler = function(e, i){
+            return r.call(tech, e, i===0 ? 1 : i); };
         E.videojs.HolaProviderHLS = HolaProviderHLS;
         console.log('HolaProviderHLS registerd as Html5 SourceHandler');
     }
