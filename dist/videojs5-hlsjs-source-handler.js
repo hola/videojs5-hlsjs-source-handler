@@ -6,10 +6,29 @@ var attached = false, disabled = false;
 E.Hls = window.Hls;
 E.videojs = window.videojs;
 
-E.VERSION = '0.0.8-22';
+E.VERSION = '0.0.8-23';
 E.name = 'HolaProviderHLS';
 
+var force_disabled = (function filter_out(){
+    var reg_attr = 'register-percent';
+    var script = document.currentScript||
+        document.querySelector('#hola_vjs_hls_provider');
+    if (!script||!script.hasAttribute(reg_attr))
+        return false;
+    var conf = +script.getAttribute(reg_attr);
+    if (isNaN(conf)||conf<0||conf>100)
+    {
+        console.error(E.name+': invalid '+reg_attr+' attribute, '
+            +'expected a value between 0 and 100 but '+
+            script.getAttribute(reg_attr)+' found');
+        return false;
+    }
+    return Math.random()*100>conf;
+})();
+
 E.attach = function(obsolete_param, videojs, Hls, hlsjsConfig_){
+    if (force_disabled)
+        return;
     if (Hls)
         E.Hls = Hls;
     if (videojs)
@@ -34,13 +53,15 @@ E.attach = function(obsolete_param, videojs, Hls, hlsjsConfig_){
         tech.registerSourceHandler = function(e, i){
             return r.call(tech, e, i===0 ? 1 : i); };
         E.videojs.HolaProviderHLS = HolaProviderHLS;
-        console.log('HolaProviderHLS registerd as Html5 SourceHandler');
+        console.log('HolaProviderHLS registered as Html5 SourceHandler');
     }
     else
         console.error('Hls.js is not supported in this browser!');
 };
 
 E.detach = function(){
+    if (force_disabled)
+        return;
     // we don't unregister source handler, just set it as disabled so it will
     // return false in canHandleSource()
     disabled = true;
