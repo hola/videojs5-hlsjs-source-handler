@@ -6,7 +6,7 @@ var attached = false, disabled = false;
 E.Hls = window.Hls;
 E.videojs = window.videojs;
 
-E.VERSION = '0.0.8-23';
+E.VERSION = '0.0.8-25';
 E.name = 'HolaProviderHLS';
 
 var force_disabled = (function filter_out(){
@@ -23,7 +23,7 @@ var force_disabled = (function filter_out(){
             script.getAttribute(reg_attr)+' found');
         return false;
     }
-    return Math.random()*100>conf;
+    return !conf||Math.random()*100>conf;
 })();
 
 E.attach = function(obsolete_param, videojs, Hls, hlsjsConfig_){
