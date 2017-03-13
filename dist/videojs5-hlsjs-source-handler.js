@@ -6,13 +6,13 @@ var attached = false, disabled = false;
 E.Hls = window.Hls;
 E.videojs = window.videojs;
 
-E.VERSION = '0.0.8-25';
+E.VERSION = '0.0.8-26';
 E.name = 'HolaProviderHLS';
 
 var force_disabled = (function filter_out(){
     var reg_attr = 'register-percent';
     var script = document.currentScript||
-        document.querySelector('#hola_vjs_hls_provider');
+        document.querySelector('#hola_videojs_hls_provider');
     if (!script||!script.hasAttribute(reg_attr))
         return false;
     var conf = +script.getAttribute(reg_attr);
