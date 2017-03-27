@@ -64,11 +64,20 @@ E.detach = function(){
     disabled = true;
 };
 
-E.canHandleSource = function(source){
+E.canPlayType = function(type){
     if (disabled)
         return '';
-    if (/^application\/x-mpegURL$/i.test(source.type))
+    if (/^application\/x-mpegURL$/i.test(type))
         return 'probably';
+    return '';
+};
+
+E.canHandleSource = function(source){
+    var _can_play_type;
+    if (disabled)
+        return '';
+    if (_can_play_type = E.canPlayType(source.type))
+        return _can_play_type;
     if (/\.m3u8/i.test(source.src))
         return 'maybe';
     return '';
