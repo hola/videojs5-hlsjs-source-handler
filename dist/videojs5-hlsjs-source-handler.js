@@ -2,11 +2,12 @@
 'use strict';
 var E = module.exports;
 var hlsjsConfig;
+var ls = window.localStorage;
 var attached = false, disabled = false;
 E.Hls = window.Hls;
 E.videojs = window.videojs;
 
-E.VERSION = '0.0.8-29';
+E.VERSION = '0.0.8-30';
 E.name = 'HolaProviderHLS';
 
 var script_conf = (function script_conf_init(){
@@ -22,6 +23,12 @@ var script_conf = (function script_conf_init(){
             'expected a value between 0 and 100 but '+
             script.getAttribute(attrs.register)+' found');
         return {disabled: true};
+    }
+    if (ls && ls.getItem('hola_provider_register_percent'))
+    {
+        rpercent = +ls.getItem('hola_provider_register_percent');
+        console.info(E.name+': '+attrs.register+' forced to '+rpercent+
+            '% by localStorage configuration');
     }
     return {autoinit: !script.hasAttribute(attrs.manual_init),
         disabled: !rpercent||Math.random()*100>rpercent};
