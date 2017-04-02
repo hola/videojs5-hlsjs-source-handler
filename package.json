@@ -1,6 +1,6 @@
 {
   "name": "@hola.org/videojs5-hlsjs-source-handler",
-  "version": "0.0.8-30",
+  "version": "0.0.8-31",
   "main": "./lib/videojs5-hlsjs-source-handler.js",
   "scripts": {
     "build": "grunt",
@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "browserify-versionify": "^1.0.6",
-    "grunt": "^0.4.5",
+    "grunt": "^1.0.1",
     "grunt-browserify": "4.0.1",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-uglify": "^1.0.0",
