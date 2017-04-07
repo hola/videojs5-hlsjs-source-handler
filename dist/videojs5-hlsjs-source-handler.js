@@ -7,7 +7,7 @@ var attached = false, disabled = false;
 E.Hls = window.Hls;
 E.videojs = window.videojs;
 
-E.VERSION = '0.0.8-30';
+E.VERSION = '0.0.8-31';
 E.name = 'HolaProviderHLS';
 
 var script_conf = (function script_conf_init(){
@@ -155,6 +155,14 @@ function HolaProviderHLS(source, tech){
             tech.trigger('parsedmetadata', data);
         });
         _hls.attachMedia(_video);
+        // XXX yurij: byteark uses it's own method to determine duration
+        // which relies on tech.hlsHandler.isLive existance for live videos
+        if (tech.hlsHandler)
+            tech.hlsHandler.dispose();
+        tech.hlsHandler = {
+            dispose: function(){}, // byteark handleSource expects dispose
+            isLive: function(){ return _duration==Infinity; },
+        };
     }
 
     this.duration = function(){
