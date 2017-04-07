@@ -7,7 +7,7 @@ var attached = false, disabled = false;
 E.Hls = window.Hls;
 E.videojs = window.videojs;
 
-E.VERSION = '0.0.8-31';
+E.VERSION = '0.0.8-32';
 E.name = 'HolaProviderHLS';
 
 var script_conf = (function script_conf_init(){
