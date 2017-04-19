@@ -2,12 +2,13 @@
 'use strict';
 var E = module.exports;
 var hlsjsConfig;
-var ls = window.localStorage;
+var ls;
+try { ls = window.localStorage; } catch(e){}
 var attached = false, disabled = false;
 E.Hls = window.Hls;
 E.videojs = window.videojs;
 
-E.VERSION = '0.0.8-32';
+E.VERSION = '0.0.8-33';
 E.name = 'HolaProviderHLS';
 
 var script_conf = (function script_conf_init(){
