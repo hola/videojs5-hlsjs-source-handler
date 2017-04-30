@@ -8,7 +8,7 @@ var attached = false, disabled = false;
 E.Hls = window.Hls;
 E.videojs = window.videojs;
 
-E.VERSION = '0.0.8-36';
+E.VERSION = '0.0.8-38';
 E.name = 'HolaProviderHLS';
 
 var script_conf = (function script_conf_init(){
@@ -31,13 +31,16 @@ var script_conf = (function script_conf_init(){
             script.getAttribute(attrs.register)+' found');
         return {disabled: true};
     }
+    var embedded = '{[=it.HOLA_EMBEDDED_PROVIDER]}'==1;
+    // loader.js takes percent control on its side
+    if (embedded)
+        rpercent = 100;
     if (ls && ls.getItem('hola_provider_register_percent'))
     {
         rpercent = +ls.getItem('hola_provider_register_percent');
         console.info(E.name+': '+attrs.register+' forced to '+rpercent+
             '% by localStorage configuration');
     }
-    var embedded = '{[=it.HOLA_EMBEDDED_PROVIDER]}'==1;
     var autoinit = !embedded && !script.hasAttribute(attrs.manual_init);
     return {autoinit: autoinit,
         disabled: !rpercent||Math.random()*100>rpercent};
@@ -113,6 +116,8 @@ function HolaProviderHLS(source, tech){
     var _duration = null;
     var _seekableStart = 0;
     var _seekableEnd = 0;
+    var _player = _video.player||E.videojs.getPlayers()[_video.playerId];
+    var _preload = _player.options().preload!='none';
 
     _video.addEventListener('error', function(evt){
         var errorTxt, mediaError = evt.currentTarget.error;
@@ -166,6 +171,7 @@ function HolaProviderHLS(source, tech){
             dispose: function(){}, // byteark handleSource expects dispose
             isLive: function(){ return _duration==Infinity; },
         };
+        _video.addEventListener('waiting', _onWaitingForData);
     }
 
     this.duration = function(){
@@ -177,6 +183,7 @@ function HolaProviderHLS(source, tech){
     };
 
     this.dispose = function(){
+        _video.removeEventListener('waiting', _onWaitingForData);
         _hls.destroy();
     };
 
@@ -187,10 +194,7 @@ function HolaProviderHLS(source, tech){
     function switchQuality(qualityId){
         _hls.manual_level = qualityId;
         if (_hls.hola_adaptive)
-        {
-            (_video.player||E.videojs.getPlayers()[_video.playerId])
-            .trigger('mediachange');
-        }
+            _player.trigger('mediachange');
         else
             _hls.loadLevel = qualityId;
         updateQuality();
@@ -310,8 +314,15 @@ function HolaProviderHLS(source, tech){
         });
     }
 
+    function _onWaitingForData() {
+        if (!_preload)
+            load(source);
+        _video.removeEventListener('waiting', _onWaitingForData);
+    }
+
     initialize();
-    load(source);
+    if (_preload)
+        load(source);
 }
 
 if (script_conf.disabled)
