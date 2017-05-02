@@ -8,7 +8,7 @@ var attached = false, disabled = false;
 E.Hls = window.Hls;
 E.videojs = window.videojs;
 
-E.VERSION = '0.0.8-39';
+E.VERSION = '0.0.8-40';
 E.name = 'HolaProviderHLS';
 
 var script_conf = (function script_conf_init(){
@@ -132,7 +132,8 @@ function HolaProviderHLS(source, tech){
     var _duration = null;
     var _seekableStart = 0;
     var _seekableEnd = 0;
-    var _player = _video.player||E.videojs.getPlayers()[_video.playerId];
+    var _player = _video.player||_video.parentNode.player||
+        E.videojs.getPlayers()[_video.playerId];
     var _preload = _player.options().preload!='none';
 
     _video.addEventListener('error', function(evt){
@@ -156,6 +157,22 @@ function HolaProviderHLS(source, tech){
         console.error('MEDIA_ERROR: ', errorTxt);
     });
 
+    function reset(){
+        // XXX volodymyr: Hlsjs tech may have preset dm instance on player init
+        if (_player.techName_=='Hlsjs' && tech.hls_)
+        {
+            tech.hls_.destroy();
+            tech.hls_ = null;
+        }
+        // XXX yurij: byteark uses it's own method to determine duration
+        // which relies on tech.hlsHandler.isLive existance for live videos
+        if (tech.hlsHandler)
+            tech.hlsHandler.dispose();
+        tech.hlsHandler = {
+            dispose: function(){}, // byteark handleSource expects dispose
+            isLive: function(){ return _duration==Infinity; },
+        };
+    }
     function initialize(){
         tech.hls_obj = _hls = new E.Hls(E.videojs.mergeOptions(
             tech.options_.hlsjsConfig, hlsjsConfig));
@@ -179,14 +196,6 @@ function HolaProviderHLS(source, tech){
             tech.trigger('parsedmetadata', data);
         });
         _hls.attachMedia(_video);
-        // XXX yurij: byteark uses it's own method to determine duration
-        // which relies on tech.hlsHandler.isLive existance for live videos
-        if (tech.hlsHandler)
-            tech.hlsHandler.dispose();
-        tech.hlsHandler = {
-            dispose: function(){}, // byteark handleSource expects dispose
-            isLive: function(){ return _duration==Infinity; },
-        };
         _video.addEventListener('waiting', _onWaitingForData);
     }
 
@@ -336,6 +345,7 @@ function HolaProviderHLS(source, tech){
         _video.removeEventListener('waiting', _onWaitingForData);
     }
 
+    reset();
     initialize();
     if (_preload)
         load(source);
