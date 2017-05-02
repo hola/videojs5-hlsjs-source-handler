@@ -8,7 +8,7 @@ var attached = false, disabled = false;
 E.Hls = window.Hls;
 E.videojs = window.videojs;
 
-E.VERSION = '0.0.8-38';
+E.VERSION = '0.0.8-39';
 E.name = 'HolaProviderHLS';
 
 var script_conf = (function script_conf_init(){
@@ -59,19 +59,35 @@ E.attach = function(obsolete_param, videojs, Hls, hlsjsConfig_){
     {
         attached = true;
         disabled = false;
-        var tech = E.videojs.getTech('Html5');
-        // XXX yurij hack: some customers register their own provider and
-        // prevent other from being registered with 0 index (rge related)
-        if (tech.sourceHandlers instanceof Array)
-            tech.sourceHandlers.splice(0, 0, E);
-        else
-            tech.registerSourceHandler(E, 0);
-        // XXX yurij: prevent others handlers being registered with 0 index
-        var r = tech.registerSourceHandler;
-        tech.registerSourceHandler = function(e, i){
-            return r.call(tech, e, i===0 ? 1 : i); };
+        // XXX volodymyr: originally we register hola provider inside Html5
+        // tech, but in specific environment (e.g vjs+dm/hlsjs) hls videos
+        // may be handled by a separate tech, so depending on options.techOrder
+        // Html5 tech may be ignored == our provider not used. so we register
+        // our source handler to all hls-based techs, but ideally we should
+        // present our own tech instead
+        var registered_techs = ['Hlsjs', 'Html5'].filter(function(tech){
+            if (!(tech = E.videojs.getTech(tech)))
+                return;
+            // XXX yurij hack: some customers register their own provider and
+            // prevent other from being registered with 0 index (rge related)
+            if (tech.sourceHandlers instanceof Array)
+                tech.sourceHandlers.splice(0, 0, E);
+            else
+                tech.registerSourceHandler(E, 0);
+            // XXX yurij: prevent others handlers being registered with 0 index
+            var r = tech.registerSourceHandler;
+            tech.registerSourceHandler = function(e, i){
+                return r.call(tech, e, i===0 ? 1 : i); };
+            return true;
+        });
         E.videojs.HolaProviderHLS = HolaProviderHLS;
-        console.log('HolaProviderHLS registered as Html5 SourceHandler');
+        if (registered_techs.length)
+        {
+            console.log(E.name+' registered as %s SourceHandler',
+                registered_techs.join('/'));
+        }
+        else
+            console.log(E.name+' not registered: no suitable tech found');
     }
     else
         console.error('Hls.js is not supported in this browser!');
