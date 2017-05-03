@@ -8,7 +8,7 @@ var attached = false, disabled = false;
 E.Hls = window.Hls;
 E.videojs = window.videojs;
 
-E.VERSION = '0.0.8-40';
+E.VERSION = '0.0.8-41';
 E.name = 'HolaProviderHLS';
 
 var script_conf = (function script_conf_init(){
@@ -18,7 +18,7 @@ var script_conf = (function script_conf_init(){
     if (!script)
         return {};
     var rpercent = '{[=it.HOLA_REGISTER_PERCENT]}';
-    if (rpercent.startsWith('{['))
+    if (!rpercent.indexOf('{['))
     {
         if (!script.hasAttribute(attrs.register))
             return {};
