@@ -8,7 +8,7 @@ var attached = false, disabled = false;
 E.Hls = window.Hls;
 E.videojs = window.videojs;
 
-E.VERSION = '0.0.8-41';
+E.VERSION = '0.0.8-42';
 E.name = 'HolaProviderHLS';
 
 var script_conf = (function script_conf_init(){
@@ -173,9 +173,21 @@ function HolaProviderHLS(source, tech){
             isLive: function(){ return _duration==Infinity; },
         };
     }
+    function _log(method, message){
+        if (_hls && _hls.holaLog && _hls.holaLog[method])
+            _hls.holaLog[method].call(_hls.holaLog, message);
+    }
     function initialize(){
+        var hola_log, hls_params = {};
+        Object.assign(hls_params, hlsjsConfig);
+        if (hls_params.debug!==undefined)
+            hola_log = hls_params.debug;
+        hls_params.debug = {};
+        ['debug', 'info', 'log', 'warn','error'].forEach(function(method){
+            hls_params.debug[method] = _log.bind(null, method); });
         tech.hls_obj = _hls = new E.Hls(E.videojs.mergeOptions(
-            tech.options_.hlsjsConfig, hlsjsConfig));
+            tech.options_.hlsjsConfig, hls_params));
+        _hls.holaLog = hola_log;
         _hls.manual_level = -1;
         _hls.on(E.Hls.Events.ERROR, function(event, data){
             _onError(event, data, tech, _errorCounts);
