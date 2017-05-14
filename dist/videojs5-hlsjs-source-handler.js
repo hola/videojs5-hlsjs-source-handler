@@ -8,7 +8,7 @@ var attached = false, disabled = false;
 E.Hls = window.Hls;
 E.videojs = window.videojs;
 
-E.VERSION = '0.0.8-43';
+E.VERSION = '0.0.8-44';
 E.name = 'HolaProviderHLS';
 
 var script_conf = (function script_conf_init(){
@@ -35,6 +35,11 @@ var script_conf = (function script_conf_init(){
     // loader.js takes percent control on its side
     if (embedded)
         rpercent = 100;
+    if (window.location.search && window.URLSearchParams)
+    {
+        var params = new window.URLSearchParams(window.location.search);
+        rpercent = +params.get('hola_provider_register_percent')||rpercent;
+    }
     if (ls && ls.getItem('hola_provider_register_percent'))
     {
         rpercent = +ls.getItem('hola_provider_register_percent');
