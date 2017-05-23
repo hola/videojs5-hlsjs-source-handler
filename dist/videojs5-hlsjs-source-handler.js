@@ -8,7 +8,7 @@ var attached = false, disabled = false;
 E.Hls = window.Hls;
 E.videojs = window.videojs;
 
-E.VERSION = '0.0.8-45';
+E.VERSION = '0.0.8-47';
 E.name = 'HolaProviderHLS';
 
 var script_conf = (function script_conf_init(){
@@ -169,7 +169,8 @@ E.handleSource = function(source, tech){
 };
 
 function HolaProviderHLS(source, tech){
-    console.log('init hola/hls provider v'+E.VERSION+' hls v'+E.Hls.version);
+    console.log('init hola/hls provider v'+E.VERSION+' hls v'+E.Hls.version+
+        (E.version ? ' hap v'+E.version : ''));
     tech.name_ = 'holaHLS';
     var _video = tech.el();
     var _hls;
