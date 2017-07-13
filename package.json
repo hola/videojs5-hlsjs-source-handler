@@ -1,6 +1,6 @@
 {
   "name": "@hola.org/videojs5-hlsjs-source-handler",
-  "version": "0.0.8-49",
+  "version": "0.0.8-50",
   "main": "./lib/videojs5-hlsjs-source-handler.js",
   "scripts": {
     "build": "grunt",
