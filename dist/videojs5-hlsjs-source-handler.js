@@ -4,7 +4,7 @@ var E = module.exports;
 var hlsjsConfig;
 var attached = false, disabled = false;
 
-E.VERSION = '0.0.8-50';
+E.VERSION = '0.0.8-51';
 E.name = 'HolaProviderHLS';
 
 E.attach = function(obsolete_param, videojs, Hls, hlsjsConfig_){
@@ -313,7 +313,8 @@ function HolaProviderHLS(source, tech){
         if (levels.length > 1)
             list.push({id: -1, label: 'Auto'});
         levels.forEach(function(level, index){
-            list.push({id: index, label: levelLabel(level, levels)});
+            list.push({id: index, label: levelLabel(level, levels),
+                bitrate: level.bitrate});
         });
         tech.trigger('loadedqualitydata', {
             quality: {
