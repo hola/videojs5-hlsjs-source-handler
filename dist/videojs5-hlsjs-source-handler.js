@@ -316,14 +316,17 @@ function HolaProviderHLS(source, tech){
             list.push({id: index, label: levelLabel(level, levels),
                 bitrate: level.bitrate});
         });
-        tech.trigger('loadedqualitydata', {
+        // event can be triggered before player started to listen it
+        // so we need to save quality_data somewhere
+        var data = tech.quality_data = {
             quality: {
                 list: list,
                 selected: _hls.manual_level,
                 current: _hls.loadLevel,
             },
             callback: switchQuality,
-        });
+        };
+        tech.trigger('loadedqualitydata', data);
     }
 
     function _onWaitingForData() {
