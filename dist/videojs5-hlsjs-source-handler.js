@@ -4,7 +4,7 @@ var E = module.exports;
 var hlsjsConfig;
 var attached = false, disabled = false;
 
-E.VERSION = '0.0.8-51';
+E.VERSION = '0.0.8-52';
 E.name = 'HolaProviderHLS';
 
 E.attach = function(obsolete_param, videojs, Hls, hlsjsConfig_){
